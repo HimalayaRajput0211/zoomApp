@@ -8,6 +8,7 @@
 
 import UIKit
 import MobileRTC
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, MobileRTCAuthDelegate {
     func onMobileRTCAuthReturn(_ returnValue: MobileRTCAuthError) {
@@ -17,18 +18,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MobileRTCAuthDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        MobileRTC.shared().switchDomain("zoom.us", force: false)
-        print(MobileRTC.shared().mobileRTCDomain)
-        let authService = MobileRTC.shared().getAuthService()
-        print(authService)
-        if (authService != nil) {
-            authService?.delegate = self
-            authService?.clientKey = "bJqGEoYlZOVvJo8vBXPXN7ei68076j0Aoy5r"
-            authService?.clientSecret = "jqlJ8drZf6wXJnA91HRdA98D8EStAr7ZxVxh"
-            authService?.sdkAuth()
+        let context = MobileRTCSDKInitContext.init()
+        context.domain = "zoom.us"
+        if MobileRTC.shared().initialize(context) {
+            let authService = MobileRTC.shared().getAuthService()
+            if (authService != nil) {
+                authService?.delegate = self
+                authService?.clientKey = "bJqGEoYlZOVvJo8vBXPXN7ei68076j0Aoy5r"
+                authService?.clientSecret = "jqlJ8drZf6wXJnA91HRdA98D8EStAr7ZxVxh"
+                authService?.sdkAuth()
+            }
         }
-        // Override point for customization after application launch.
         return true
+        
     }
 
     // MARK: UISceneSession Lifecycle
